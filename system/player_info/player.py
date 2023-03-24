@@ -6,9 +6,11 @@ import traceback
 
 
 class Player:
-    def __init__(self, sock: socket) -> None:
+    def __init__(self, sock: socket, address: Any) -> None:
         self.sock: socket = sock
         self.match_check: bool = False
+        self.address: Any = address
+        self.name: str = ""
 
     @property
     def state(self) -> bool:
