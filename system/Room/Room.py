@@ -18,4 +18,4 @@ class Room:
         try:
             self.game.close()
         except:
-            raise Exception(f"{self.info}\nclose() Function Not Found")
+            raise Exception(f"{self.info}\nclose() Method Not Found")
