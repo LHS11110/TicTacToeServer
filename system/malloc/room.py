@@ -19,3 +19,10 @@ class Room:
             self.game.close()
         except:
             raise Exception(f"{self.info}\nclose() Method Not Found")
+
+    def update(self) -> None:
+        self.game.update()
+
+    @property
+    def end_check(self) -> bool:
+        return self.game.end
