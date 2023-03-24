@@ -38,5 +38,9 @@ class TicTacToeServer:
         players: list[Player] = self.matchmaker.match()
         if len(players) == 2:
             self.rooms[self.ids.pop()] = Room(rule=TicTacToe, players=players)
-        for room in self.rooms.values():
+        for room_id, room in self.rooms.items():
             room.update()
+            if room.end_check:
+                self.ids.append(room_id)
+                room.close()
+                self.rooms.pop(room_id)
