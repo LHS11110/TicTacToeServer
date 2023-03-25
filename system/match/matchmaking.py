@@ -15,11 +15,16 @@ class MatchMaking:
 
     def match(self) -> List["Player"]:
         result: List["Player"] = []
-        while len(self.player_list) >= self.headcount and len(result) < 2:
+        while (
+            len(self.player_list) + len(result) >= self.headcount
+            and len(result) < self.headcount
+        ):
             player: "Player" = self.player_list.pop()
-            if player.state and player.match_check:
+            if player.state:
                 result.append(player)
-        if len(result) < 2:
+            else:
+                print("Close Socket")
+        if len(result) < self.headcount:
             for p in result:
                 self.player_list.append(p)
             return []
