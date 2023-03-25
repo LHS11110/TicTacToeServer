@@ -19,12 +19,12 @@ class Player:
         try:
             msg: bytes = b""
             msg = self.sock.recv(2048)
+            if len(msg) == 0:
+                return False
             for m in msg.decode().split("\\"):
                 if len(m) == 0:
                     continue
                 self.buffs.append(m)
-            if len(msg) == 0:
-                return False
         except SocketError as error:
             if error.errno == errno.WSAECONNRESET:
                 return False
