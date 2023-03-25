@@ -13,6 +13,7 @@ class TicTacToeServer:
         self.listener: socket
         self.rooms: dict[int, Room]
         self.ids: list[int]
+        self.room_count: int = 0
 
     def setting(self) -> None:
         ip: str = str(os.getenv("IP"))
@@ -33,14 +34,22 @@ class TicTacToeServer:
         try:
             client, address = self.listener.accept()
             self.matchmaker.push(Player(client, address))
+            print("Accepted", len(self.matchmaker.player_list))
         except:
             ...
         players: list[Player] = self.matchmaker.match()
         if len(players) == 2:
             self.rooms[self.ids.pop()] = Room(rule=TicTacToe, players=players)
+            self.room_count += 1
+            print("Mached", self.room_count)
+        call_back: list[int] = []
         for room_id, room in self.rooms.items():
             room.update()
             if room.end_check:
-                self.ids.append(room_id)
                 room.close()
-                self.rooms.pop(room_id)
+                call_back.append(room_id)
+        for room_id in call_back:
+            self.room_count -= 1
+            print(self.rooms[room_id].info, self.room_count)
+            self.rooms.pop(room_id)
+            self.ids.append(room_id)
