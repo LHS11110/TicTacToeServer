@@ -45,6 +45,9 @@ class Player:
                     command: Any = loads(data)
                     command_q.put(command)
                 except:
-                    print(traceback.format_exc(), end="Invalid Data Type Conversion\n")
+                    print(
+                        traceback.format_exc() + data,
+                        end="Invalid Data Type Conversion\n",
+                    )
         except:
             ...
