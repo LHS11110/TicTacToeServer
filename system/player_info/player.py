@@ -12,7 +12,7 @@ class Player:
         self.match_check: bool = False
         self.address: Any = address
         self.name: str = ""
-        self.buffs: list[str] = []
+        self.buffs: str = ""
 
     @property
     def state(self) -> bool:
@@ -21,23 +21,23 @@ class Player:
             msg = self.sock.recv(2048)
             if len(msg) == 0:
                 return False
-            for m in msg.decode().split("\\"):
-                if len(m) == 0:
-                    continue
-                self.buffs.append(m)
+            self.buffs += msg.decode()
         except SocketError as error:
-            if error.errno == errno.WSAECONNRESET:
+            if error.errno != errno.EWOULDBLOCK:
+                print("Socket Error: ", error.errno)
                 return False
         return True
 
     def load(self, command_q: Queue[Any]) -> None:
         try:
-            buff: str = self.sock.recv(2048).decode()
-            while len(self.buffs) != 0:
-                try:
-                    command_q.put(loads(self.buffs.pop()))
-                except:
-                    print(traceback.format_exc(), end="Invalid Data Type Conversion\n")
+            buff: str = self.buffs
+            self.buffs = ""
+            try:
+                buff += self.sock.recv(2048).decode()
+            except:
+                ...
+            if len(buff) == 0:
+                return
             for data in buff.split("\\"):
                 if len(data) == 0:
                     continue
