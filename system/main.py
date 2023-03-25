@@ -4,7 +4,21 @@ from .malloc.room import Room
 from .player_info.player import Player
 from .rule.tictactoe import TicTacToe
 from typing import Any
-import os
+from dataclasses import dataclass, field
+import time
+
+
+def get_time() -> str:
+    return time.strftime("%Y.%m.%d - %H:%M:%S")
+
+
+@dataclass(frozen=True, kw_only=True)
+class Config:
+    IP: str
+    PORT: int
+    backlog: int
+    number_of_room: int
+    created_at: str = field(default_factory=get_time)
 
 
 class TicTacToeServer:
@@ -15,16 +29,12 @@ class TicTacToeServer:
         self.ids: list[int]
         self.room_count: int = 0
 
-    def setting(self) -> None:
-        ip: str = str(os.getenv("IP"))
-        port: str = str(os.getenv("PORT"))
-        if ip == "None" or port == "None":
-            return
+    def setting(self, config: Config) -> None:
         self.listener = socket(AF_INET, SOCK_STREAM)
-        self.listener.bind((ip, int(port)))
-        self.listener.listen(20)
+        self.listener.bind((config.IP, config.PORT))
+        self.listener.listen(config.backlog)
         self.listener.setblocking(False)
-        self.ids = [_id for _id in range(10000)]
+        self.ids = [_id for _id in range(config.number_of_room)]
         self.rooms = {}
         self.matchmaker = MatchMaking(2)
 
