@@ -23,7 +23,7 @@ class MatchMaking:
             if player.state:
                 result.append(player)
             else:
-                print("Close Socket")
+                print("Closed Socket")
         if len(result) < self.headcount:
             for p in result:
                 self.player_list.append(p)
