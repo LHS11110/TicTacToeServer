@@ -51,7 +51,7 @@ class TicTacToeServer:
         if len(players) == 2:
             self.rooms[self.ids.pop()] = Room(rule=TicTacToe, players=players)
             self.room_count += 1
-            print("Mached", self.room_count)
+            print("Matched", self.room_count)
         call_back: list[int] = []
         for room_id, room in self.rooms.items():
             room.update()
